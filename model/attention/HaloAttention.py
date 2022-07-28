@@ -10,7 +10,7 @@ def to(x):
     return {'device': x.device, 'dtype': x.dtype}
 
 def pair(x):
-    return (x, x) if not isinstance(x, tuple) else x
+    return x if isinstance(x, tuple) else (x, x)
 
 def expand_dim(t, dim, k):
     t = t.unsqueeze(dim = dim)

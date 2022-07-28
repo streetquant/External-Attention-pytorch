@@ -22,7 +22,7 @@ class SKAttention(nn.Module):
             )
         self.fc=nn.Linear(channel,self.d)
         self.fcs=nn.ModuleList([])
-        for i in range(len(kernels)):
+        for _ in range(len(kernels)):
             self.fcs.append(nn.Linear(self.d,channel))
         self.softmax=nn.Softmax(dim=0)
 
@@ -30,10 +30,7 @@ class SKAttention(nn.Module):
 
     def forward(self, x):
         bs, c, _, _ = x.size()
-        conv_outs=[]
-        ### split
-        for conv in self.convs:
-            conv_outs.append(conv(x))
+        conv_outs = [conv(x) for conv in self.convs]
         feats=torch.stack(conv_outs,0)#k,bs,channel,h,w
 
         ### fuse
@@ -51,9 +48,7 @@ class SKAttention(nn.Module):
         attention_weughts=torch.stack(weights,0)#k,bs,channel,1,1
         attention_weughts=self.softmax(attention_weughts)#k,bs,channel,1,1
 
-        ### fuse
-        V=(attention_weughts*feats).sum(0)
-        return V
+        return (attention_weughts*feats).sum(0)
 
         
 

@@ -17,8 +17,7 @@ class ResidualAttention(nn.Module):
         y_raw=self.fc(x).flatten(2) #b,num_class,hxw
         y_avg=torch.mean(y_raw,dim=2) #b,num_class
         y_max=torch.max(y_raw,dim=2)[0] #b,num_class
-        score=y_avg+self.la*y_max
-        return score
+        return y_avg+self.la*y_max
 
         
 

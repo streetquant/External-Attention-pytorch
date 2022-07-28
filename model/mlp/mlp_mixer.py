@@ -44,11 +44,18 @@ class MlpMixer(nn.Module):
         self.patch_size=patch_size
         self.tokens_mlp_dim=tokens_mlp_dim
         self.channels_mlp_dim=channels_mlp_dim
-        self.embd=nn.Conv2d(3,channels_mlp_dim,kernel_size=patch_size,stride=patch_size) 
+        self.embd=nn.Conv2d(3,channels_mlp_dim,kernel_size=patch_size,stride=patch_size)
         self.ln=nn.LayerNorm(channels_mlp_dim)
-        self.mlp_blocks=[]
-        for _ in range(num_blocks):
-            self.mlp_blocks.append(MixerBlock(tokens_mlp_dim,channels_mlp_dim,tokens_hidden_dim,channels_hidden_dim))
+        self.mlp_blocks = [
+            MixerBlock(
+                tokens_mlp_dim,
+                channels_mlp_dim,
+                tokens_hidden_dim,
+                channels_hidden_dim,
+            )
+            for _ in range(num_blocks)
+        ]
+
         self.fc=nn.Linear(channels_mlp_dim,num_classes)
 
     def forward(self,x):
@@ -63,8 +70,7 @@ class MlpMixer(nn.Module):
             y=self.mlp_blocks[i](y) # bs,tokens,channels
         y=self.ln(y) # bs,tokens,channels
         y=torch.mean(y,dim=1,keepdim=False) # bs,channels
-        probs=self.fc(y) # bs,num_classes
-        return probs
+        return self.fc(y)
             
 
 

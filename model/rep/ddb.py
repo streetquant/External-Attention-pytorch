@@ -21,9 +21,8 @@ def transII_conv_branch(conv1, conv2):
 
 
 def transIII_conv_sequential(conv1, conv2):
-    weight=F.conv2d(conv2.weight.data,conv1.weight.data.permute(1,0,2,3))
     # bias=((conv2.weight.data*(conv1.bias.data.reshape(1,-1,1,1))).sum(-1).sum(-1).sum(-1))+conv2.bias.data
-    return weight#,bias
+    return F.conv2d(conv2.weight.data,conv1.weight.data.permute(1,0,2,3))
 
 def transIV_conv_concat(conv1, conv2):
     print(conv1.bias.data.shape)

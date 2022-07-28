@@ -19,8 +19,7 @@ class sMLPBlock(nn.Module):
         x_w=self.proj_w(x)
         x_id=x
         x_fuse=torch.cat([x_h,x_w,x_id],dim=1)
-        out=self.fuse(x_fuse.permute(0,2,3,1)).permute(0,3,1,2)
-        return out
+        return self.fuse(x_fuse.permute(0,2,3,1)).permute(0,3,1,2)
 
 
 if __name__ == '__main__':

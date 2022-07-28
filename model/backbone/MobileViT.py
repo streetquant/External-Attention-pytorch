@@ -38,14 +38,14 @@ class Attention(nn.Module):
     def __init__(self,dim,heads,head_dim,dropout):
         super().__init__()
         inner_dim=heads*head_dim
-        project_out=not(heads==1 and head_dim==dim)
+        project_out = heads != 1 or head_dim != dim
 
         self.heads=heads
         self.scale=head_dim**-0.5
 
         self.attend=nn.Softmax(dim=-1)
         self.to_qkv=nn.Linear(dim,inner_dim*3,bias=False)
-        
+
         self.to_out=nn.Sequential(
             nn.Linear(inner_dim,dim),
             nn.Dropout(dropout)
@@ -142,11 +142,7 @@ class MV2Block(nn.Module):
                 nn.BatchNorm2d(out)
             )
     def forward(self,x):
-        if(self.use_res_connection):
-            out=x+self.conv(x)
-        else:
-            out=self.conv(x)
-        return out
+        return x+self.conv(x) if self.use_res_connection else self.conv(x)
 
 class MobileViT(nn.Module):
     def __init__(self,image_size,dims,channels,num_classes,depths=[2,4,3],expansion=4,kernel_size=3,patch_size=2):

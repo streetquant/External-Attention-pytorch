@@ -25,8 +25,7 @@ class Depth_Pointwise_Conv1d(nn.Module):
             groups=1
         )
     def forward(self,x):
-        out=self.pointwise_conv(self.depth_conv(x))
-        return out
+        return self.pointwise_conv(self.depth_conv(x))
     
 
 

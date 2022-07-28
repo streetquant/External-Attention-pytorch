@@ -48,7 +48,7 @@ class CondConv(nn.Module):
             self.bias=nn.Parameter(torch.randn(K,out_planes),requires_grad=True)
         else:
             self.bias=None
-        
+
         if(self.init_weight):
             self._initialize_weights()
 
@@ -70,7 +70,7 @@ class CondConv(nn.Module):
             output=F.conv2d(x,weight=aggregate_weight,bias=aggregate_bias,stride=self.stride,padding=self.padding,groups=self.groups*bs,dilation=self.dilation)
         else:
             output=F.conv2d(x,weight=aggregate_weight,bias=None,stride=self.stride,padding=self.padding,groups=self.groups*bs,dilation=self.dilation)
-        
+
         output=output.view(bs,self.out_planes,h,w)
         return output
 
