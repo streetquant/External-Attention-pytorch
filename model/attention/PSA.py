@@ -11,20 +11,37 @@ class PSA(nn.Module):
         super().__init__()
         self.S=S
 
-        self.convs=[]
-        for i in range(S):
-            self.convs.append(nn.Conv2d(channel//S,channel//S,kernel_size=2*(i+1)+1,padding=i+1))
+        self.convs = [
+            nn.Conv2d(
+                channel // S,
+                channel // S,
+                kernel_size=2 * (i + 1) + 1,
+                padding=i + 1,
+            )
+            for i in range(S)
+        ]
 
-        self.se_blocks=[]
-        for i in range(S):
-            self.se_blocks.append(nn.Sequential(
+        self.se_blocks = [
+            nn.Sequential(
                 nn.AdaptiveAvgPool2d(1),
-                nn.Conv2d(channel//S, channel // (S*reduction),kernel_size=1, bias=False),
+                nn.Conv2d(
+                    channel // S,
+                    channel // (S * reduction),
+                    kernel_size=1,
+                    bias=False,
+                ),
                 nn.ReLU(inplace=True),
-                nn.Conv2d(channel // (S*reduction), channel//S,kernel_size=1, bias=False),
-                nn.Sigmoid()
-            ))
-        
+                nn.Conv2d(
+                    channel // (S * reduction),
+                    channel // S,
+                    kernel_size=1,
+                    bias=False,
+                ),
+                nn.Sigmoid(),
+            )
+            for _ in range(S)
+        ]
+
         self.softmax=nn.Softmax(dim=1)
 
 
@@ -51,9 +68,7 @@ class PSA(nn.Module):
             SPC_out[:,idx,:,:,:]=conv(SPC_out[:,idx,:,:,:])
 
         #Step2:SE weight
-        se_out=[]
-        for idx,se in enumerate(self.se_blocks):
-            se_out.append(se(SPC_out[:,idx,:,:,:]))
+        se_out = [se(SPC_out[:,idx,:,:,:]) for idx, se in enumerate(self.se_blocks)]
         SE_out=torch.stack(se_out,dim=1)
         SE_out=SE_out.expand_as(SPC_out)
 

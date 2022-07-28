@@ -43,8 +43,7 @@ class ParallelPolarizedSelfAttention(nn.Module):
         spatial_wz=torch.matmul(spatial_wq,spatial_wv) #bs,1,h*w
         spatial_weight=self.sigmoid(spatial_wz.reshape(b,1,h,w)) #bs,1,h,w
         spatial_out=spatial_weight*x
-        out=spatial_out+channel_out
-        return out
+        return spatial_out+channel_out
 
 
 
@@ -88,8 +87,7 @@ class SequentialPolarizedSelfAttention(nn.Module):
         spatial_wq=self.softmax_spatial(spatial_wq)
         spatial_wz=torch.matmul(spatial_wq,spatial_wv) #bs,1,h*w
         spatial_weight=self.sigmoid(spatial_wz.reshape(b,1,h,w)) #bs,1,h,w
-        spatial_out=spatial_weight*channel_out
-        return spatial_out
+        return spatial_weight*channel_out
 
 
 

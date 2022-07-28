@@ -47,12 +47,8 @@ class RepBlock(nn.Module):
      def forward(self, inputs):
           if(self.deploy):
                return self.activation(self.brb_rep(inputs))
-          
-          if(self.brb_identity==None):
-               identity_out=0
-          else:
-               identity_out=self.brb_identity(inputs)
-          
+
+          identity_out = 0 if self.brb_identity is None else self.brb_identity(inputs)
           return self.activation(self.brb_1x1(inputs)+self.brb_3x3(inputs)+identity_out)
 
      
@@ -78,10 +74,7 @@ class RepBlock(nn.Module):
 
      #将1x1的卷积变成3x3的卷积参数
      def _pad_1x1_kernel(self,kernel):
-          if(kernel is None):
-               return 0
-          else:
-               return F.pad(kernel,[1]*4)
+          return 0 if (kernel is None) else F.pad(kernel,[1]*4)
 
 
      #将identity，1x1,3x3的卷积融合到一起，变成一个3x3卷积的参数
@@ -117,7 +110,7 @@ class RepBlock(nn.Module):
                gamma = branch.weight
                beta = branch.bias
                eps = branch.eps
-          
+
           std=(running_var+eps).sqrt()
           t=gamma/std
           t=t.view(-1,1,1,1)

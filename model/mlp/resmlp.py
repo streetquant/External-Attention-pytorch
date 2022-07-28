@@ -35,7 +35,7 @@ class PreAffinePostLayerScale(nn.Module): # https://arxiv.org/abs/2103.17239
         super().__init__()
         if depth <= 18:
             init_eps = 0.1
-        elif depth > 18 and depth <= 24:
+        elif depth <= 24:
             init_eps = 1e-5
         else:
             init_eps = 1e-6
@@ -71,14 +71,13 @@ class ResMLP(nn.Module):
         self.classifier=nn.Linear(dim,class_num)
         self.softmax=nn.Softmax(1)
     
-    def forward(self, x) :
+    def forward(self, x):
         y=self.flatten(x)
         y=self.embedding(y)
         y=self.mlp(y)
         y=self.aff(y)
         y=torch.mean(y,dim=1) #bs,dim
-        out=self.softmax(self.classifier(y))
-        return out
+        return self.softmax(self.classifier(y))
 
 if __name__ == '__main__':
     input=torch.randn(50,3,14,14)

@@ -63,11 +63,7 @@ class gMLP(nn.Module):
         y=nn.Sequential(*self.gmlp)(embeded)
 
 
-        #to logits
-        logits=self.to_logits(y)
-
-
-        return logits
+        return self.to_logits(y)
 
 
             

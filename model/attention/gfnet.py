@@ -93,10 +93,13 @@ class GFNet(nn.Module):
         w = h // 2 + 1
 
 
-        self.blocks = nn.ModuleList([
-            Block(dim=embed_dim, mlp_ratio=mlp_ratio, h=h, w=w)
-            for i in range(depth)
-        ])
+        self.blocks = nn.ModuleList(
+            [
+                Block(dim=embed_dim, mlp_ratio=mlp_ratio, h=h, w=w)
+                for _ in range(depth)
+            ]
+        )
+
 
         self.head = nn.Linear(embed_dim, num_classes)
         self.softmax = nn.Softmax(1)

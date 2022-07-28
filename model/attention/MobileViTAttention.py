@@ -28,14 +28,14 @@ class Attention(nn.Module):
     def __init__(self,dim,heads,head_dim,dropout):
         super().__init__()
         inner_dim=heads*head_dim
-        project_out=not(heads==1 and head_dim==dim)
+        project_out = heads != 1 or head_dim != dim
 
         self.heads=heads
         self.scale=head_dim**-0.5
 
         self.attend=nn.Softmax(dim=-1)
         self.to_qkv=nn.Linear(dim,inner_dim*3,bias=False)
-        
+
         self.to_out=nn.Sequential(
             nn.Linear(inner_dim,dim),
             nn.Dropout(dropout)

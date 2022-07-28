@@ -52,9 +52,7 @@ class MobileViTv2Attention(nn.Module):
         context_score = weight_i * self.fc_k(input) #bs,nq,d_model
         context_vector = torch.sum(context_score,dim=1,keepdim=True) #bs,1,d_model
         v = self.fc_v(input) * context_vector #bs,nq,d_model
-        out = self.fc_o(v) #bs,nq,d_model
-
-        return out
+        return self.fc_o(v)
 
 
 if __name__ == '__main__':

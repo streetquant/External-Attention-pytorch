@@ -33,9 +33,7 @@ class ExternalAttention(nn.Module):
         attn=self.mk(queries) #bs,n,S
         attn=self.softmax(attn) #bs,n,S
         attn=attn/torch.sum(attn,dim=2,keepdim=True) #bs,n,S
-        out=self.mv(attn) #bs,n,d_model
-
-        return out
+        return self.mv(attn)
 
 
 if __name__ == '__main__':

@@ -90,11 +90,14 @@ class ResNeXt(nn.Module):
         if(stride!=1 or self.in_channel!=channel*block.expansion):
             self.downsample=nn.Conv2d(self.in_channel,channel*block.expansion,stride=stride,kernel_size=1,bias=False)
         #第一个conv部分，可能需要downsample
-        layers=[]
-        layers.append(block(self.in_channel,channel,downsample=self.downsample,stride=stride))
+        layers = [
+            block(
+                self.in_channel, channel, downsample=self.downsample, stride=stride
+            )
+        ]
+
         self.in_channel=channel*block.expansion
-        for _ in range(1,blocks):
-            layers.append(block(self.in_channel,channel))
+        layers.extend(block(self.in_channel,channel) for _ in range(1,blocks))
         return nn.Sequential(*layers)
 
 

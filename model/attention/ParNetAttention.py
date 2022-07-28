@@ -31,8 +31,7 @@ class ParNetAttention(nn.Module):
         x1=self.conv1x1(x)
         x2=self.conv3x3(x)
         x3=self.sse(x)*x
-        y=self.silu(x1+x2+x3)
-        return y
+        return self.silu(x1+x2+x3)
 
 
 if __name__ == '__main__':

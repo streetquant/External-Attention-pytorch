@@ -31,8 +31,7 @@ def drop_connect(inputs, p, training):
     random_tensor = keep_prob
     random_tensor += torch.rand([batch_size, 1, 1, 1], dtype=inputs.dtype, device=inputs.device)
     binary_tensor = torch.floor(random_tensor)
-    output = inputs / keep_prob * binary_tensor
-    return output
+    return inputs / keep_prob * binary_tensor
 
 
 def get_same_padding_conv2d(image_size=None):
@@ -41,7 +40,7 @@ def get_same_padding_conv2d(image_size=None):
 def get_width_and_height_from_size(x):
     """ Obtains width and height from a int or tuple """
     if isinstance(x, int): return x, x
-    if isinstance(x, list) or isinstance(x, tuple): return x
+    if isinstance(x, (list, tuple)): return x
     else: raise TypeError()
 
 def calculate_output_image_size(input_image_size, stride):

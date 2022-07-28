@@ -80,8 +80,7 @@ class BAMBlock(nn.Module):
         sa_out=self.sa(x)
         ca_out=self.ca(x)
         weight=self.sigmoid(sa_out+ca_out)
-        out=(1+weight)*x
-        return out
+        return (1+weight)*x
 
 
 if __name__ == '__main__':
